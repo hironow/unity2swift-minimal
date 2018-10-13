@@ -3,26 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
-public class SampleBridge : MonoBehaviour
-{
-    public PlaceList placeList; // マップに表示するピンの情報
-
-    // Objective-C++に記述した関数をC#クラスにも記載することで、C#から呼び出し可能になる。
-    // 必ず[DllImport("__Internal")]を設定しておかないと、Objective-C++の関数と紐づかない
-    // また、今回IOSのネイティブコードであるため、IOS以外(エディタ含む)はエラーとなってしまうため、#ifで実行させないようにする
+public class SampleBridge : MonoBehaviour {
+    #region Declare external C interface
 #if UNITY_IOS && !UNITY_EDITOR
     [DllImport("__Internal")]
-    private static extern void showMap(float x, float y, float width, float height, string placeJson);
+    private static extern void _showMap(float x, float y, float width, float height, string placeJson);
+
+    [DllImport("__Internal")]
+    private static extern void _closeMap();
 #endif
+    #endregion
 
-    void Start()
-    {
-        // JsonUtilityを使ってピン情報をJSONに変換
-        var json = JsonUtility.ToJson(placeList);
-
-        // 上記のインタフェース経由でネイティブコードを呼び出すが、こちらもIOS専用としてある
+    #region Wrapped methods and properties
+    public static void ShowMap(float x, float y, float width, float height, string placeJson) {
 #if UNITY_IOS && !UNITY_EDITOR
-        showMap(0f, 0f, 500f, 500f, json);
+        _showMap(x, y, width, height, placeJson);
+#else
+        Debug.Log("ShowMap only work on iOS");
 #endif
     }
+
+    public static void CloseMap() {
+#if UNITY_IOS && !UNITY_EDITOR
+        _closeMap();
+#else
+        Debug.Log("CloseMap only work on iOS");
+#endif
+    }
+    #endregion
+
+    #region Singleton implementation
+    private static SampleBridge _instance;
+    public static SampleBridge Instance {
+        get {
+            if (_instance == null) {
+                var obj = new GameObject("SampleBridge");
+                _instance = obj.AddComponent<SampleBridge>();
+            }
+            return _instance;
+        }
+    }
+
+    void Awake() {
+        if (_instance != null) {
+            Destroy(gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+    #endregion
 }

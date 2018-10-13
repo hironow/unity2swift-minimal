@@ -35,7 +35,9 @@ class SampleBridge : NSObject {
             mapView.addAnnotation(annotation)
         }
         
-        view.addSubview(mapView)
-        
+        view.addSubview(mapView)   
+    }
+
+    @objc static func closeMap() {
     }
 }
