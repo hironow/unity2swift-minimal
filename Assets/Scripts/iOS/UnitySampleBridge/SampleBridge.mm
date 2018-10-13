@@ -9,5 +9,6 @@ extern "C" {
     }
 
     void _closeMap() {
+        [SampleBridge closeMap];
     }
 }

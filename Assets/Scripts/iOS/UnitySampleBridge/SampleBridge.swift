@@ -16,7 +16,7 @@ struct Place: Codable {
 
 class SampleBridge : NSObject {
     // @objcをつけて置かないと、Objective-C++から呼び出せないので、必ずつけておく。
-    @objc static func showMap(frame:CGRect, placeJson: String) {
+    @objc static func showMap(frame: CGRect, placeJson: String) {
         // UnityGetGLView()でUnityで使用しているUIViewを取得できるので、そこにaddSubViewできる。
         guard let view = UnityGetGLView() else {
             return
@@ -34,10 +34,22 @@ class SampleBridge : NSObject {
             annotation.title = $0.title
             mapView.addAnnotation(annotation)
         }
-        
+
+        print("View:\(mapView.description)")
         view.addSubview(mapView)   
     }
 
     @objc static func closeMap() {
+        guard let view = UnityGetGLView() else {
+            return
+        }
+
+        // remove subview
+        for subview in view.subviews {
+            print("View:\(subview.description)")
+            if subview.isKind(of: MKMapView.self) { 
+                subview.removeFromSuperview()
+            }
+        }
     }
 }
