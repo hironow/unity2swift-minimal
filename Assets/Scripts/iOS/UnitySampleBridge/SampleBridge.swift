@@ -52,4 +52,22 @@ class SampleBridge : NSObject {
             }
         }
     }
+
+    @objc static func getMessage() -> String {
+        guard let view = UnityGetGLView() else {
+            return ""
+        }
+        
+        var description = "nothing..."
+        
+        // get subview description
+        for subview in view.subviews {
+            if subview.isKind(of: MKMapView.self) {
+                description = subview.description
+                break
+            }
+        }
+        
+        return description
+    }
 }

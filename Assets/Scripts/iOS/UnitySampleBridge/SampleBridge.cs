@@ -11,6 +11,9 @@ public class SampleBridge : MonoBehaviour {
 
     [DllImport("__Internal")]
     private static extern void _closeMap();
+
+    [DllImport("__Internal")]
+    private static extern string _getMessage();
 #endif
     #endregion
 
@@ -28,6 +31,15 @@ public class SampleBridge : MonoBehaviour {
         _closeMap();
 #else
         Debug.Log("CloseMap only work on iOS");
+#endif
+    }
+
+    public static string GetMessage() {
+#if UNITY_IOS && !UNITY_EDITOR
+        return _getMessage();
+#else
+        Debug.Log("GetMessage only work on iOS");
+        return "";
 #endif
     }
     #endregion
