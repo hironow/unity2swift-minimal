@@ -70,4 +70,22 @@ class SampleBridge : NSObject {
         
         return description
     }
+
+    @objc static func hasMap() -> Bool {
+        guard let view = UnityGetGLView() else {
+            return false
+        }
+        
+        var b = false
+        
+        // check subview
+        for subview in view.subviews {
+            if subview.isKind(of: MKMapView.self) {
+                b = true
+                break
+            }
+        }
+
+        return b
+    }
 }

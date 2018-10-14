@@ -20,4 +20,8 @@ extern "C" {
         retStr[strlen(str)] = '\0';
         return retStr;
     }
+
+    bool _hasMap() {
+        return [SampleBridge hasMap];
+    }
 }

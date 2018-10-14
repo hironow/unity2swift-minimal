@@ -26,5 +26,10 @@ public class ButtonScript : MonoBehaviour {
 
         string response = SampleBridge.GetMessage();
         message.text = response;
+
+        bool result = SampleBridge.HasMap();
+        Debug.Log("HasMap: " + result);
+
+        message.text += "\nHasMap: " + result;
     }
 }

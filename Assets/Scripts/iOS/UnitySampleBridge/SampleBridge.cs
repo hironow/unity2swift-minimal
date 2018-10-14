@@ -14,6 +14,9 @@ public class SampleBridge : MonoBehaviour {
 
     [DllImport("__Internal")]
     private static extern string _getMessage();
+
+    [DllImport("__Internal")]
+    private static extern bool _hasMap();
 #endif
     #endregion
 
@@ -40,6 +43,15 @@ public class SampleBridge : MonoBehaviour {
 #else
         Debug.Log("GetMessage only work on iOS");
         return "";
+#endif
+    }
+
+    public static bool HasMap() {
+#if UNITY_IOS && !UNITY_EDITOR
+        return _hasMap();
+#else
+        Debug.Log("HasMap only work on iOS");
+        return false;
 #endif
     }
     #endregion
